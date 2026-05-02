@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #818cf8;
+  --color-primary-hover: #6366f1;
+  --color-secondary: #34d399;
+  --color-accent: #fb7185;
+  --color-bg: #020617;
+  --font-outfit: "Outfit", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-50 font-outfit;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-slate-900/60 backdrop-blur-xl border border-white/10;
+  }
+}
