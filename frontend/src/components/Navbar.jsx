@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -50,14 +52,41 @@ const Navbar = () => {
 
         <div className="flex items-center">
           {user ? (
-            <div className="flex items-center gap-6">
-              <span className="text-sm font-semibold text-white">Hi, {user.name.split(' ')[0]}</span>
-              <button 
-                className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all"
-                onClick={handleLogout}
+            <div className="relative">
+              <div 
+                className="flex items-center gap-3 cursor-pointer bg-white/5 border border-white/10 px-3 py-2 rounded-2xl hover:bg-white/10 transition-all"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                Logout
-              </button>
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-500 flex items-center justify-center text-sm font-black text-white shadow-lg">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-sm font-bold text-white hidden md:block">{user.name.split(' ')[0]}</span>
+                <span className="text-slate-400 text-xs">▼</span>
+              </div>
+
+              {/* Dropdown Menu */}
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-3 w-48 bg-slate-900 border border-white/10 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 z-50">
+                  <div className="px-4 py-3 border-b border-white/5">
+                    <p className="text-sm font-bold text-white truncate">{user.name}</p>
+                    <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                  </div>
+                  <div className="p-2 space-y-1">
+                    <button 
+                      className="w-full text-left px-3 py-2 text-sm text-slate-300 hover:bg-white/5 hover:text-white rounded-xl transition-colors flex items-center gap-2"
+                      onClick={() => { setDropdownOpen(false); navigate("/profile"); }}
+                    >
+                      <span>👤</span> Profile
+                    </button>
+                    <button 
+                      className="w-full text-left px-3 py-2 text-sm text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 rounded-xl transition-colors flex items-center gap-2"
+                      onClick={handleLogout}
+                    >
+                      <span>🚪</span> Logout
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <button 

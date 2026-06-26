@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "../components/Navbar";
 import { getAllBookings, getNotifications as fetchNotificationsAPI, updateBookingStatus } from "../services/api";
+import SkeletonLoader from "../components/SkeletonLoader";
 
 const Admin = () => {
   const [bookings, setBookings] = useState([]);
@@ -59,6 +60,33 @@ const Admin = () => {
           <h1 className="text-4xl font-black mb-10 bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent inline-block border-l-8 border-indigo-500 pl-6">
             Admin Dashboard
           </h1>
+
+          {/* Analytics Overview */}
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
+              <span className="text-3xl">📊</span> Analytics Overview
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 rounded-3xl p-6 shadow-lg shadow-indigo-500/10">
+                <p className="text-indigo-300 font-bold text-sm mb-2">Total Revenue</p>
+                <h3 className="text-3xl font-black text-white">
+                  ₹{bookings.filter(b => b.status === "confirmed").reduce((acc, curr) => acc + (curr.totalPrice || curr.venue?.price || 0), 0).toLocaleString()}
+                </h3>
+              </div>
+              <div className="bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 rounded-3xl p-6 shadow-lg shadow-emerald-500/10">
+                <p className="text-emerald-300 font-bold text-sm mb-2">Total Bookings</p>
+                <h3 className="text-3xl font-black text-white">{bookings.length}</h3>
+              </div>
+              <div className="bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 rounded-3xl p-6 shadow-lg shadow-amber-500/10">
+                <p className="text-amber-300 font-bold text-sm mb-2">Pending Approvals</p>
+                <h3 className="text-3xl font-black text-white">{bookings.filter(b => b.status === "pending").length}</h3>
+              </div>
+              <div className="bg-gradient-to-br from-rose-500/20 to-pink-500/20 border border-rose-500/30 rounded-3xl p-6 shadow-lg shadow-rose-500/10">
+                <p className="text-rose-300 font-bold text-sm mb-2">Cancellations</p>
+                <h3 className="text-3xl font-black text-white">{bookings.filter(b => b.status === "cancelled").length}</h3>
+              </div>
+            </div>
+          </section>
           
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
@@ -84,9 +112,7 @@ const Admin = () => {
             </h2>
             <div className="space-y-4">
               {loading ? (
-                <div className="flex justify-center py-10">
-                  <div className="w-10 h-10 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
-                </div>
+                <SkeletonLoader count={4} type="booking" />
               ) : bookings.length === 0 ? (
                 <p className="text-slate-500 italic">No bookings found</p>
               ) : (

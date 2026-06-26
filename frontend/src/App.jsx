@@ -8,6 +8,7 @@ import Filter from "./pages/Filter";
 import Booking from "./pages/Booking";
 import Admin from "./pages/Admin";
 import MyBookings from "./pages/MyBookings";
+import Profile from "./pages/Profile";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/booking" element={<Booking />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

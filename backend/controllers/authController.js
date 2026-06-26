@@ -48,6 +48,7 @@ const signup = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (err) {
@@ -61,7 +62,7 @@ const signup = async (req, res) => {
 // @access  Public
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role, adminKey } = req.body;
 
     // Validation
     if (!email || !password) {
@@ -80,6 +81,21 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "Wrong password ❌" });
     }
 
+    // Role check (if specified)
+    if (role && user.role !== role) {
+      return res.status(403).json({ message: `Access denied. You are not registered as an ${role}. ❌` });
+    }
+
+    // 🛡️ Admin secret key check — required for admin login
+    if (role === "admin") {
+      if (!adminKey) {
+        return res.status(403).json({ message: "Admin secret key is required ❌" });
+      }
+      if (adminKey !== process.env.ADMIN_SECRET_KEY) {
+        return res.status(403).json({ message: "Invalid admin secret key ❌" });
+      }
+    }
+
     // Generate token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
@@ -92,6 +108,7 @@ const login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (err) {
@@ -99,6 +116,7 @@ const login = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 
 // @desc    Get current logged-in user profile
 // @route   GET /api/auth/me
