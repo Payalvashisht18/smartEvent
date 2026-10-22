@@ -2,7 +2,7 @@ import axios from "axios";
 
 // ─── BASE AXIOS INSTANCE ─────────────────────────────────────
 const API = axios.create({
-  baseURL: "http://localhost:5001/api",
+  baseURL: "https://smartevent-1-iiqv.onrender.com",
 });
 
 // ─── ATTACH JWT TOKEN TO EVERY REQUEST ───────────────────────
