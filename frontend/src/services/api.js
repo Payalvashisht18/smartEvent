@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Base URL of deployed SmartEvent backend
 const API = axios.create({
-  baseURL: "https://smartevent-1-iiqv.onrender.com",
+  baseURL: "https://smartevent-1-iiqv.onrender.com/api",
 });
 
 // Attach JWT token to every request
